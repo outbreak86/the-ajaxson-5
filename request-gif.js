@@ -2,7 +2,7 @@
 
 $(document).ready(function() {
     // register our function as the "callback" to be triggered by the form's submission event
-    $("#form-gif-button").submit(fetchAndDisplayGif); // in other words, when the form is submitted, fetchAndDisplayGif() will be executed
+    $("#form-gif-button").bind("click",checkForHuman); // in other words, when the form is submitted, fetchAndDisplayGif() will be executed
 });
 
 
@@ -12,12 +12,10 @@ $(document).ready(function() {
  * 
  * upon receiving a response from Giphy, updates the DOM to display the new GIF
  */
-function fetchAndDisplayGif(event) {
+function fetchAndDisplayGif() {
 
     // This prevents the form submission from doing what it normally does: send a request (which would cause our page to refresh).
     // Because we will be making our own AJAX request, we dont need to send a normal request and we definitely don't want the page to refresh.
-    event.preventDefault();
-    checkForHuman();
     // get the user's input text from the DOM
     var searchQuery = $('[name=tag]').val(); // TODO should be e.g. "dance"
 
@@ -59,14 +57,22 @@ function fetchAndDisplayGif(event) {
     setGifLoadedStatus(false);
 }
 
-function checkForHuman()
+function checkForHuman(event)
 {
+    event.preventDefault();
     ////NOT WORKING!
     $("#human-error").attr("hidden", true);
-    var hresponse = $('[human=respone]').val();
+    var hresponse = $('[name=humanresponse]').val();
+    console.log(hresponse);
     if(hresponse != '5')
     {
+        $("#human-error").attr("hidden", false);
+        $("#gif").attr("src", "");
+    }
+    else
+    {
         $("#human-error").attr("hidden", true);
+        fetchAndDisplayGif();
     }
 }
 
